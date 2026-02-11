@@ -134,43 +134,38 @@ function getIconName(label) {
 }
 
 // ページ読み込み時に自動実行
-window.onload = function() {
-    // パスを ./data.csv とすることで、同じ階層であることを明示
-    fetch('./data.csv')
-    .then(res => {
-        if(!res.ok) {
-            throw new Error(`ファイルが見つかりません (Status: ${res.status})。ファイル名が "data.csv" かつ index.html と同じ階層にあるか確認してください。`);
-        }
-        return res.text();
-    })
-    .then(csv => {
-        Papa.parse(csv, {
-            header: false, dynamicTyping: true, skipEmptyLines: true,
-            complete: function(results) {
-                const raw = results.data;
-                if (raw.length < 3) throw new Error("CSVデータが空、または形式が正しくありません。");
-                
-                masterData = raw.slice(2);
-                columns.attr = [9, 2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
-                columns.psych = [];
-                for(let i=10; i<=52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
-                columns.arch = [];
-                for(let i=53; i<=98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
-                
-                setupFilters();
-                setupPsychList();
-                document.getElementById('data-status').innerText = "SUCCESS: 1,000人分のデータを同期完了";
-                document.getElementById('main-ui').style.display = 'grid';
-                document.getElementById('results-area').style.display = 'block';
-                runSimulation();
-            }
-        });
-    })
-    .catch(err => {
-        document.getElementById('data-status').innerText = "ERROR: " + err.message;
-        document.getElementById('data-status').style.color = "#e74c3c";
-        console.error(err);
-    });
+window.onload = function () {
+  Papa.parse("data.csv", {
+    download: true,
+    header: false,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+    complete: function (results) {
+      const raw = results.data;
+      if (raw.length < 3) {
+        throw new Error("CSVデータが空、または形式が正しくありません。");
+      }
+
+      masterData = raw.slice(2);
+      columns.attr = [9, 2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
+      columns.psych = [];
+      for (let i = 10; i <= 52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
+      columns.arch = [];
+      for (let i = 53; i <= 98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
+
+      setupFilters();
+      setupPsychList();
+      document.getElementById('data-status').innerText = "SUCCESS: データ同期完了";
+      document.getElementById('main-ui').style.display = 'grid';
+      document.getElementById('results-area').style.display = 'block';
+      runSimulation();
+    },
+    error: function (err) {
+      document.getElementById('data-status').innerText = "ERROR: " + err.message;
+      document.getElementById('data-status').style.color = "#e74c3c";
+      console.error(err);
+    }
+  });
 };
 
 function setupFilters() {
