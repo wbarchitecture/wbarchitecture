@@ -15,36 +15,26 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
         header { border-bottom: 1px solid var(--primary); margin-bottom: 30px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
         
-        .upload-zone { background: white; padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; text-align: center; }
-        .btn { cursor: pointer; background: #000; color: #fff; padding: 10px 20px; font-size: 0.8rem; letter-spacing: 0.1em; transition: 0.3s; }
-        .btn:hover { opacity: 0.7; }
+        .status-bar { background: #fff; padding: 10px 20px; border: 1px solid var(--border); margin-bottom: 20px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
         .config-panel { display: grid; grid-template-columns: 350px 1fr; gap: 30px; background: white; padding: 30px; border: 1px solid var(--border); margin-bottom: 40px; }
         .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .target-section { border-left: 1px solid var(--border); padding-left: 30px; }
         label { display: block; font-size: 0.65rem; font-weight: bold; color: #888; margin-bottom: 5px; text-transform: uppercase; }
-        select { width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 0.85rem; background: #fff; border-radius: 0; }
+        select { width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 0.85rem; background: #fff; border-radius: 0; transition: 0.2s; }
+        select:focus { border-color: var(--primary); }
         .target-select { font-size: 1.1rem; font-weight: 300; background: #fafafa; border-bottom: 2px solid var(--primary); }
 
-        /* カード表示エリア */
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; min-height: 400px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; min-height: 400px; transition: opacity 0.3s ease; }
         
-        /* 「ほわーん」のアニメーション定義 */
         .card { 
             background: var(--card-bg); border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            opacity: 0;
-            transform: translateY(20px) scale(0.95);
+            opacity: 0; transform: translateY(20px) scale(0.95);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
-
-        /* JSでこのクラスを付与すると「ほわーん」と出る */
-        .card.is-visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
+        .card.is-visible { opacity: 1; transform: translateY(0) scale(1); }
         .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); border-color: var(--primary); }
         
         .card-visual { width: 100%; height: 160px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
@@ -52,7 +42,7 @@
         .icon-placeholder { color: #ccc; }
 
         .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-label { font-size: 0.85rem; font-weight: 500; min-height: 3em; margin-bottom: 15px; letter-spacing: 0.02em; }
+        .card-label { font-size: 0.85rem; font-weight: 500; min-height: 3.2em; margin-bottom: 15px; letter-spacing: 0.02em; line-height: 1.5; }
         .card-footer { display: flex; justify-content: space-between; align-items: baseline; }
         .r-value { font-size: 1.8rem; font-weight: 200; font-family: 'Georgia', serif; }
         .pos { color: var(--accent-pos); } .neg { color: var(--accent-neg); }
@@ -67,18 +57,18 @@
         <div id="n-display" style="font-size: 0.8rem; font-weight: bold; letter-spacing: 0.1em;">N = 0</div>
     </header>
 
-    <div class="upload-zone">
-        <label class="btn">
-            SELECT DATA (A.csv)
-            <input type="file" id="csv-file" accept=".csv" style="display:none;">
-        </label>
-        <span id="file-name" style="margin-left:15px; font-size:0.75rem; color:#888;"></span>
+    <div class="status-bar" id="status-bar">
+        <span id="data-status">CSVをロード中...</span>
+        <span id="file-info" style="color: var(--accent-pos);">data.csv</span>
     </div>
 
     <div class="config-panel" id="main-ui" style="display:none;">
-        <div class="filter-grid" id="filters"></div>
+        <div class="filter-panel">
+            <label>Attributes</label>
+            <div class="filter-grid" id="filters"></div>
+        </div>
         <div class="target-section">
-            <label>TARGET PSYCHOLOGY</label>
+            <label>Target Psychology</label>
             <select id="target-psychology" class="target-select" onchange="runSimulation()"></select>
         </div>
     </div>
@@ -92,6 +82,7 @@
 let masterData = [];
 let columns = { attr: [], psych: [], arch: [] };
 
+// 画像URLリスト（正規化用）
 const imageUrlMapNormalized = {
   "心地のよい居場所がある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_a99830ec-ad0c-4b83-af07-9712e7573259.png",
   "快適な室温を保つことができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_db45356c-6acc-408f-b887-89d8c508dc7d.png",
@@ -110,8 +101,9 @@ const imageUrlMapNormalized = {
   "みんなで集まる快適な場所がある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_8c0aa027-950e-4850-b84d-1bd434b92b9b.png",
   "快適に食事を摂ることができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_d37c5903-4bf2-42ef-ae9d-17b19014e261.png",
   "快適に睡眠（仮眠）を摂ることができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_b006e411-9caf-4959-8793-3f4cc67198d7.png",
-  "快適なトイレがある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_fc0bc73f-f6f7-46c3-ae62-cb869bfe9955.png",
+  "快適なトイレがある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_fc0bc044-648b-402a-9e11-e770b777a83d.png",
   "清掃などによって清潔な状態に保たれている": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_93739dfa-0c0f-4cc7-8faf-8d3abc77f95b.png",
+  "浴室（シャワー室）、洗面室で自分自身を清潔に保つことができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_350616b6-9467-4d7a-85d7-f01037f37435.png",
   "家具のレイアウト等を自由に変えることができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_c4a5ba4c-2a56-4d0b-b007-6b680556f17b.png",
   "建具を開閉すること等により空間を自由に使うことができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_39d07e65-860a-45be-ab64-b8ae03b0c418.png",
   "好みの壁紙に変えたり、カスタマイズすることができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_deb6fa9f-7a66-42e1-a815-d8d9c7d50b55.png",
@@ -141,32 +133,42 @@ function getIconName(label) {
     return 'component';
 }
 
-document.getElementById('csv-file').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if(!file) return;
-    document.getElementById('file-name').innerText = file.name;
-    Papa.parse(file, {
-        header: false, dynamicTyping: true, skipEmptyLines: true,
-        complete: function(results) {
-            const raw = results.data;
-            masterData = raw.slice(2);
-            columns.attr = [9, 2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
-            columns.psych = [];
-            for(let i=10; i<=52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
-            columns.arch = [];
-            for(let i=53; i<=98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
-            setupFilters();
-            setupPsychList();
-            document.getElementById('main-ui').style.display = 'grid';
-            document.getElementById('results-area').style.display = 'block';
-            runSimulation();
-        }
+// ページ読み込み時に自動実行
+window.onload = function() {
+    fetch('data.csv')
+    .then(res => {
+        if(!res.ok) throw new Error("data.csvが見つかりません。");
+        return res.text();
+    })
+    .then(csv => {
+        Papa.parse(csv, {
+            header: false, dynamicTyping: true, skipEmptyLines: true,
+            complete: function(results) {
+                const raw = results.data;
+                masterData = raw.slice(2);
+                columns.attr = [9, 2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
+                columns.psych = [];
+                for(let i=10; i<=52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
+                columns.arch = [];
+                for(let i=53; i<=98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
+                
+                setupFilters();
+                setupPsychList();
+                document.getElementById('data-status').innerText = "DATA LOADED SUCCESSFULLY";
+                document.getElementById('main-ui').style.display = 'grid';
+                document.getElementById('results-area').style.display = 'block';
+                runSimulation();
+            }
+        });
+    })
+    .catch(err => {
+        document.getElementById('data-status').innerText = "ERROR: " + err.message;
+        document.getElementById('data-status').style.color = "red";
     });
-});
+};
 
 function setupFilters() {
-    const container = document.getElementById('filters');
-    container.innerHTML = '';
+    const container = document.getElementById('filters'); container.innerHTML = '';
     columns.attr.forEach(col => {
         const uniqueValues = [...new Set(masterData.map(d => d[col.idx]))].filter(v => v != null).sort();
         const div = document.createElement('div');
@@ -196,38 +198,4 @@ function runSimulation() {
     let filtered = masterData;
     selects.forEach(s => {
         if (s.value !== 'all') {
-            const val = isNaN(s.value) ? s.value : Number(s.value);
-            filtered = filtered.filter(d => d[s.dataset.idx] === val);
-        }
-    });
-
-    const targetIdx = parseInt(document.getElementById('target-psychology').value);
-    const results = columns.arch.map(a => ({ label: a.label, r: calculateCorrelation(filtered, targetIdx, a.idx) })).sort((a, b) => b.r - a.r);
-
-    document.getElementById('n-display').innerText = `SAMPLE SIZE: N = ${filtered.length}`;
-    const grid = document.getElementById('card-grid');
-    
-    // 一旦透明にしてからクリア
-    grid.style.opacity = 0;
-    
-    setTimeout(() => {
-        grid.innerHTML = '';
-        results.forEach((res, i) => {
-            if (Math.abs(res.r) < 0.01) return;
-            const img = normImageUrlMap[normalize(res.label)];
-            const visual = img ? `<img src="${img}" loading="lazy">` : `<div class="icon-placeholder"><i data-lucide="${getIconName(res.label)}" stroke-width="1"></i></div>`;
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `<div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(3)}</span><span class="r-unit">Correlation</span></div></div>`;
-            grid.appendChild(card);
-            
-            // 「しゅるる」と順番に出現させる
-            setTimeout(() => card.classList.add('is-visible'), i * 50);
-        });
-        lucide.createIcons();
-        grid.style.opacity = 1;
-    }, 200);
-}
-</script>
-</body>
-</html>
+            const val = is
