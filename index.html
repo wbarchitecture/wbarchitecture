@@ -11,44 +11,41 @@
             --primary: #1a1a1a; --accent-pos: #d4a373; --accent-neg: #457b9d;
             --bg: #f8f8f8; --card-bg: #ffffff; --text: #222; --border: #eeeeee;
         }
-        body { font-family: "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: "Helvetica Neue", Arial, "Hiragino Sans", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
-        header { border-bottom: 1px solid var(--primary); margin-bottom: 30px; padding-bottom: 15px; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; }
+        header { border-bottom: 1px solid var(--primary); margin-bottom: 30px; padding-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* タイトルとN数を横並びにするためのボックス */
         .title-row { display: flex; justify-content: space-between; align-items: baseline; width: 100%; }
-
-        /* 追加した説明文のスタイル */
+        
         .description-text { 
             font-size: 0.85rem; 
             color: #555; 
             line-height: 1.8; 
             margin-top: 15px; 
-            max-width: 1000px; 
-            white-space: pre-wrap; /* 改行を有効にする */
+            max-width: 1100px; 
+            white-space: pre-wrap; 
         }
 
         .status-bar { background: #fff; padding: 10px 20px; border: 1px solid var(--border); margin-bottom: 20px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
 
-        .config-panel { display: grid; grid-template-columns: 350px 1fr; gap: 30px; background: white; padding: 30px; border: 1px solid var(--border); margin-bottom: 40px; }
-        .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .target-section { border-left: 1px solid var(--border); padding-left: 30px; }
+        .config-panel { display: grid; grid-template-columns: 350px 1fr; gap: 40px; background: white; padding: 30px; border: 1px solid var(--border); margin-bottom: 40px; }
+        .target-section { display: flex; flex-direction: column; }
+        .filter-panel { border-left: 1px solid var(--border); padding-left: 40px; }
+        .filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        
         label { display: block; font-size: 0.65rem; font-weight: bold; color: #888; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 0.85rem; background: #fff; border-radius: 0; transition: 0.2s; }
-        select:focus { border-color: var(--primary); }
         .target-select { font-size: 1.1rem; font-weight: 300; background: #fafafa; border-bottom: 2px solid var(--primary); }
 
-        /* 2カラム比較エリア */
         .comparison-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         .column-header { text-align: center; margin-bottom: 20px; padding: 10px; background: var(--primary); color: white; letter-spacing: 0.2em; font-weight: 200; text-transform: uppercase; font-size: 0.9rem; }
         .n-badge { font-size: 0.7rem; color: #aaa; margin-top: 5px; }
 
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; min-height: 400px; transition: opacity 0.3s ease; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; min-height: 400px; }
         
         .card { 
             background: var(--card-bg); border: 1px solid var(--border); 
             display: flex; flex-direction: column; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             opacity: 0; transform: translateY(20px) scale(0.95);
             transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
@@ -57,19 +54,18 @@
         
         .card-visual { width: 100%; height: 140px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
         .card-visual img { width: 100%; height: 100%; object-fit: cover; }
-        .icon-placeholder { color: #ccc; }
-
+        
         .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-label { font-size: 0.8rem; font-weight: 500; min-height: 3.2em; margin-bottom: 10px; letter-spacing: 0.02em; line-height: 1.5; }
+        .card-label { font-size: 0.8rem; font-weight: 500; min-height: 3.2em; margin-bottom: 10px; line-height: 1.5; }
         .card-footer { display: flex; justify-content: space-between; align-items: baseline; }
-        .r-value { font-size: 1.5rem; font-weight: 200; font-family: 'Georgia', serif; }
+        /* 小数点1位を際立たせるためのフォント調整 */
+        .r-value { font-size: 1.8rem; font-weight: 200; font-family: 'Georgia', serif; }
         .pos { color: var(--accent-pos); } .neg { color: var(--accent-neg); }
         .r-unit { font-size: 0.5rem; color: #aaa; text-transform: uppercase; margin-left: 4px; }
 
-        @media (max-width: 1000px) {
-            .comparison-layout { grid-template-columns: 1fr; }
-            .config-panel { grid-template-columns: 1fr; }
-            .target-section { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; }
+        @media (max-width: 1100px) {
+            .comparison-layout, .config-panel { grid-template-columns: 1fr; }
+            .filter-panel { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; }
         }
     </style>
 </head>
@@ -89,17 +85,17 @@
 
     <div class="status-bar" id="status-bar">
         <span id="data-status">CSVをロード中...</span>
-        <span id="file-info" style="color: var(--accent-pos);">data.csv</span>
+        <span style="color: var(--accent-pos);">data.csv</span>
     </div>
 
     <div class="config-panel" id="main-ui" style="display:none;">
-        <div class="filter-panel">
-            <label>Attributes Filters</label>
-            <div class="filter-grid" id="filters"></div>
-        </div>
         <div class="target-section">
             <label>Target Psychology</label>
             <select id="target-psychology" class="target-select" onchange="runSimulation()"></select>
+        </div>
+        <div class="filter-panel">
+            <label>Attributes Filters</label>
+            <div class="filter-grid" id="filters"></div>
         </div>
     </div>
 
@@ -121,7 +117,7 @@
 let masterData = [];
 let columns = { attr: [], psych: [], arch: [] };
 
-const imageUrlMapNormalized = {
+const imageUrlMap = {
   "心地のよい居場所がある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_a99830ec-ad0c-4b83-af07-9712e7573259.png",
   "快適な室温を保つことができる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x142_webp_db45356c-6acc-408f-b887-89d8c508dc7d.png",
   "快適に感じる広さがある": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_63c604f4-dbd1-430f-9818-0f1c12e38b32.png",
@@ -159,12 +155,11 @@ const imageUrlMapNormalized = {
   "植物（観葉植物、生花）が置かれている": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-266x141_webp_66c2c41b-a00b-4a8c-9cc9-237d0b5fdfef.png"
 };
 
-function normalize(str) { return str ? str.replace(/[\s\n\r]/g, "") : ""; }
-const normImageUrlMap = {};
-for (let key in imageUrlMapNormalized) { normImageUrlMap[normalize(key)] = imageUrlMapNormalized[key]; }
+function superNormalize(s) { return s ? String(s).replace(/[\s\n\r（）\(\)]/g, "") : ""; }
+const normMap = {}; for (let k in imageUrlMap) { normMap[superNormalize(k)] = imageUrlMap[k]; }
 
 function getIconName(label) {
-    const l = normalize(label);
+    const l = superNormalize(label);
     if (l.includes('安心')) return 'shield';
     if (l.includes('音')) return 'volume-2';
     if (l.includes('視線')) return 'eye-off';
@@ -177,7 +172,6 @@ window.onload = function () {
         complete: function (results) {
             const raw = results.data;
             masterData = raw.slice(2);
-            // 建築タイプ(9)を属性リストから除外し、それ以外を表示
             columns.attr = [2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
             columns.psych = []; for (let i = 10; i <= 52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
             columns.arch = []; for (let i = 53; i <= 98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
@@ -230,11 +224,12 @@ function renderGrid(gridId, nId, data, targetIdx) {
         grid.innerHTML = '';
         results.forEach((res, i) => {
             if (Math.abs(res.r) < 0.01) return;
-            const img = normImageUrlMap[normalize(res.label)];
+            const img = normMap[superNormalize(res.label)];
             const visual = img ? `<img src="${img}" loading="lazy">` : `<div class="icon-placeholder"><i data-lucide="${getIconName(res.label)}" stroke-width="1"></i></div>`;
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(3)}</span><span class="r-unit">Correlation</span></div></div>`;
+            // 【修正箇所】.toFixed(3) を .toFixed(1) に変更
+            card.innerHTML = `<div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(1)}</span><span class="r-unit">Correlation</span></div></div>`;
             grid.appendChild(card);
             setTimeout(() => card.classList.add('is-visible'), i * 30);
         });
@@ -256,9 +251,8 @@ function runSimulation() {
     document.getElementById('total-n').innerText = `TOTAL N = ${filteredTotal.length}`;
     const targetIdx = parseInt(document.getElementById('target-psychology').value);
 
-    // 住宅(index 9)とオフィス(index 9)でデータを分割してレンダリング
-    const housingData = filteredTotal.filter(d => d[9] === '住宅');
-    const officeData = filteredTotal.filter(d => d[9] === 'オフィス');
+    const housingData = filteredTotal.filter(d => superNormalize(String(d[9])) === "住宅");
+    const officeData = filteredTotal.filter(d => superNormalize(String(d[9])) === "オフィス");
 
     renderGrid('grid-housing', 'n-housing', housingData, targetIdx);
     renderGrid('grid-office', 'n-office', officeData, targetIdx);
