@@ -58,8 +58,7 @@
         .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .card-label { font-size: 0.8rem; font-weight: 500; min-height: 3.2em; margin-bottom: 10px; line-height: 1.5; }
         .card-footer { display: flex; justify-content: space-between; align-items: baseline; }
-        /* 小数点1位を際立たせるためのフォント調整 */
-        .r-value { font-size: 1.8rem; font-weight: 200; font-family: 'Georgia', serif; }
+        .r-value { font-size: 1.6rem; font-weight: 200; font-family: 'Georgia', serif; }
         .pos { color: var(--accent-pos); } .neg { color: var(--accent-neg); }
         .r-unit { font-size: 0.5rem; color: #aaa; text-transform: uppercase; margin-left: 4px; }
 
@@ -228,8 +227,8 @@ function renderGrid(gridId, nId, data, targetIdx) {
             const visual = img ? `<img src="${img}" loading="lazy">` : `<div class="icon-placeholder"><i data-lucide="${getIconName(res.label)}" stroke-width="1"></i></div>`;
             const card = document.createElement('div');
             card.className = 'card';
-            // 【修正箇所】.toFixed(3) を .toFixed(1) に変更
-            card.innerHTML = `<div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(1)}</span><span class="r-unit">Correlation</span></div></div>`;
+            // 【修正箇所】 .toFixed(2) に変更
+            card.innerHTML = `<div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(2)}</span><span class="r-unit">Correlation</span></div></div>`;
             grid.appendChild(card);
             setTimeout(() => card.classList.add('is-visible'), i * 30);
         });
