@@ -14,7 +14,6 @@
         body { font-family: "Helvetica Neue", Arial, "Hiragino Sans", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
         
-        /* ヘッダー調整：リンク追加 */
         header { 
             border-bottom: 1px solid var(--primary); 
             margin-bottom: 30px; 
@@ -44,7 +43,6 @@
             white-space: pre-wrap; 
         }
 
-        /* モーダル（About Us）のスタイル */
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             background-color: rgba(255,255,255,0.95); overflow-y: auto;
@@ -123,7 +121,7 @@
 <div class="container">
     <header>
         <div class="header-top">
-            <h1 style="font-weight: 300; letter-spacing: 0.1em; margin:0;">ウェルビーイングと空間要素</h1>
+            <h1 style="font-weight: 300; letter-spacing: 0.1em; margin:0;">Architecture Psychology Engine</h1>
             <a class="nav-link" onclick="openAbout()">ABOUT US</a>
         </div>
         <div class="title-row" style="margin-top:20px;">
@@ -169,7 +167,6 @@
 let masterData = [];
 let columns = { attr: [], psych: [], arch: [] };
 
-// モーダル制御関数
 function openAbout() { document.getElementById('aboutModal').style.display = "block"; }
 function closeAbout() { document.getElementById('aboutModal').style.display = "none"; }
 window.onclick = function(event) { if (event.target == document.getElementById('aboutModal')) closeAbout(); }
@@ -229,7 +226,8 @@ window.onload = function () {
         complete: function (results) {
             const raw = results.data;
             masterData = raw.slice(2);
-            columns.attr = [2, 3, 4, 5, 6, 7, 8].map(idx => ({ idx, name: raw[0][idx] }));
+            // 属性を「性別(2)」「年代(3)」「居住地方(4)」に限定
+            columns.attr = [2, 3, 4].map(idx => ({ idx, name: raw[0][idx] }));
             columns.psych = []; for (let i = 10; i <= 52; i++) columns.psych.push({ idx: i, label: raw[1][i] || raw[0][i] });
             columns.arch = []; for (let i = 53; i <= 98; i++) columns.arch.push({ idx: i, label: raw[1][i] || raw[0][i] });
 
@@ -266,7 +264,7 @@ function calculateCorrelation(data, idxX, idxY) {
         sX+=x; sY+=y; sXY+=x*y; sX2+=x*x; sY2+=y*y;
     }
     const num = (n*sXY)-(sX*sY), den = Math.sqrt(((n*sX2)-(sX*sX))*((n*sY2)-(sY*sY)));
-    return den===0 ? 0 : num/den;
+    return den===0 ? 0 : num / den;
 }
 
 function renderGrid(gridId, nId, data, targetIdx) {
