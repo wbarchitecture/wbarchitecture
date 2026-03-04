@@ -22,40 +22,21 @@
         
         header { border-bottom: 0px solid var(--primary); margin-bottom: 10px; padding-bottom: 20px; display: flex; flex-direction: column; }
         .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        .print-btn {
+            background: var(--primary); color: #fff; padding: 10px 25px; font-size: 0.8rem;
+            letter-spacing: 0.2em; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 10px;
+        }
+        .print-btn:hover { opacity: 0.8; transform: translateY(-2px); }
 
         .description-text { font-size: 1rem; font-weight: 600; color: #555; line-height: 1.8; margin-top: 20px; max-width: 1100px; white-space: pre-wrap; }
         .about-link { display: inline-block; margin-top: 10px; font-size: 0.9rem; color: var(--accent-pos); text-decoration: underline; cursor: pointer; }
 
-        /* コンフィグパネル：ボタン配置用に grid-template-areas を設定 */
-        .config-panel { 
-            display: none; 
-            grid-template-columns: 350px 1fr; 
-            gap: 40px; 
-            background: white; 
-            padding: 30px; 
-            border: 1px solid var(--border); 
-            margin-bottom: 40px; 
-            position: relative;
-        }
-        
+        .config-panel { display: none; grid-template-columns: 350px 1fr; gap: 40px; background: white; padding: 30px; border: 1px solid var(--border); margin-bottom: 40px; }
         .target-section { display: flex; flex-direction: column; }
-        .filter-panel { border-left: 1px solid var(--border); padding-left: 40px; display: flex; flex-direction: column; justify-content: space-between; }
+        .filter-panel { border-left: 1px solid var(--border); padding-left: 40px; }
         .filter-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         
-        /* 絞り込み枠内の下部に配置するボタンエリア */
-        .print-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .print-btn {
-            background: var(--primary); color: #fff; padding: 8px 20px; font-size: 0.75rem;
-            letter-spacing: 0.2em; cursor: pointer; border: none; transition: 0.3s; 
-            display: flex; align-items: center; gap: 8px;
-        }
-        .print-btn:hover { opacity: 0.8; transform: translateY(-1px); }
-
         label { display: block; font-size: 0.65rem; font-weight: bold; color: #888; margin-bottom: 5px; text-transform: uppercase; }
         select { width: 100%; padding: 10px; border: 1px solid var(--border); font-size: 0.85rem; background: #fff; border-radius: 0; }
         .target-select { font-family: "Klee One", cursive; font-size: 1rem; font-weight: 300; background: #fafafa; border-bottom: 2px solid var(--primary); }
@@ -85,14 +66,30 @@
         .pos { color: var(--accent-pos); } .neg { color: var(--accent-neg); }
         .r-unit { font-size: 0.5rem; color: #aaa; text-transform: uppercase; margin-top: 4px; }
 
-        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); overflow-y: auto; }
-        .modal-content { max-width: 900px; margin: 40px auto; padding: 60px; background: #ffffff; border: 1px solid #ddd; box-shadow: 0 20px 60px rgba(0,0,0,0.1); line-height: 1.8; color: #333; text-align: justify; position: relative; }
-        .close-modal { position: absolute; right: 30px; top: 30px; cursor: pointer; font-size: 2rem; opacity: 0.5; }
-
-        @media (max-width: 1100px) { 
-            .comparison-layout, .config-panel { grid-template-columns: 1fr; } 
-            .filter-panel { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; } 
+        /* モーダル：境界と浮遊感を強化 */
+        .modal { 
+            display: none; position: fixed; z-index: 3000; left: 0; top: 0; 
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); /* 少し暗くして浮遊感を出す */
+            overflow-y: auto; 
         }
+        .modal-content { 
+            max-width: 900px; margin: 40px auto; padding: 60px; 
+            background: #ffffff; /* モーダル本体は白 */
+            border: 1px solid #ddd; /* 薄めの枠 */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); /* 柔らかな影 */
+            line-height: 1.8; color: #333; text-align: justify; 
+            position: relative;
+        }
+        .modal-content h2 { font-size: 1.5rem; font-weight: 300; margin-bottom: 40px; border-bottom: 1px solid #4d4d4d; padding-bottom: 15px; }
+        .modal-content h3 { font-size: 1.1rem; font-weight: 300; margin-top: 40px; margin-bottom: 20px; color: var(--primary); border-left: 4px solid var(--accent-pos); padding-left: 15px; }
+        .modal-content p { margin-bottom: 1.5em; font-size: 0.95rem; }
+        .modal-content ul { padding-left: 20px; font-size: 0.9rem; }
+        .modal-content li { margin-bottom: 10px; }
+        .close-modal { position: absolute; right: 30px; top: 30px; cursor: pointer; font-size: 2rem; opacity: 0.5; }
+        .close-modal:hover { opacity: 1; }
+        .ref-list { font-size: 0.8rem; color: #777; list-style: none; padding-left: 0; }
+
+        @media (max-width: 1100px) { .comparison-layout, .config-panel { grid-template-columns: 1fr; } .filter-panel { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 20px; } }
     </style>
 </head>
 <body>
@@ -101,6 +98,9 @@
     <header>
         <div class="header-top">
             <h1 style="font-size: 1.6rem; font-weight: 300; letter-spacing: 0.1em; margin:0;">ウェルビーイングと空間要素</h1>
+            <button class="print-btn" onclick="generatePreview()">
+                <i data-lucide="printer" size="16"></i> PRINT
+            </button>
         </div>
         <p class="description-text">本サイトは、「主観的ウェルビーイング」と「空間の構成要素」の相関係数をもとに可視化するツールです。</p>
         <span class="about-link" onclick="openAbout()">本ツール作成の背景と、私たちについて</span>
@@ -115,12 +115,8 @@
             <select id="target-psychology" class="target-select" onchange="runSimulation()"></select>
         </div>
         <div class="filter-panel">
+            <label>Attributes Filters</label>
             <div class="filter-grid" id="filters"></div>
-            <div class="print-container">
-                <button class="print-btn" onclick="generatePreview()">
-                    <i data-lucide="printer" size="14"></i> PRINT PDF
-                </button>
-            </div>
         </div>
     </div>
 
@@ -140,7 +136,43 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeAbout()">&times;</span>
         <h2>本ツール作成の背景と、ウェルビーイング空間設計プロジェクト（仮）</h2>
-        <p>（中身は中略）</p>
+        
+        <h3>プロジェクトについて</h3>
+        <p>ウェルビーイング空間設計プロジェクト（仮）は、建築物を発注する人やデザインする人、施工する人、実際に使う人など、建築にかかわるすべての人が、そのプロセスやアウトプットにおいて「居心地のよさ」を感じられることを目指しています。</p>
+        <p>周知の通り、建築物は、世の中にあるそのほかの製作物と同様に、それをつくるプロセスや使われていくあいだにおいて、さまざまな人や組織が関わっています。それぞれが役割を持ち、つくられ使われることで、社会が営まれています。</p>
+        <p>現代社会において、ほとんどの活動が、建築物のなかで行われていることを考えると、良い社会をつくり、営むということにおいて、建築物は大きな責任を負っていると考えます。つまり、居心地よくつくられ、居心地よく使われる建築物というあり方を目指すことは、よりよい社会をつくることにつながると考えています。</p>
+
+        <h3>建築設計や施工に関わる人々の「めやす」として</h3>
+        <p>しかし、その「居心地のよい空間や建築物」を作り出すための明確な基準が、世の中にはまだありません。予算や敷地面積など限られた条件のなかで、建築要素の何を優先することが、「居心地のよさ」につながるのでしょうか。天井高でしょうか？それとも窓の大きさでしょうか？</p>
+        <p>これまでは、デザイナーや設計者の経験値や施主の想いなどをもとにつくられてきた「居心地のよさ」ですが、それは時に「ひとりよがり」となり、真の「居心地のよさ」にはつながっていないケースもあると思われます。</p>
+        <p>もちろん、「居心地のよさ」は個人の主観であり、数値的には測れないものがほとんどかもしれません。しかし、先ほども述べたとおり、建築物はたくさんの人がチームとなり、多様な技術や知識を結集してつくられます。そのプロセスにおいて、それぞれが多様な能力を発揮するための「めやす」のようなものの必要性を感じ、本プロジェクトがスタートしました。</p>
+        <p>本ツールが、居心地のよいプロセスで作られた居心地のよい建築物をつくる一助となり、使う人の居心地のよい空間と時間、よりよい社会へとつながっていくことを願っています。</p>
+
+        <h3>調査対象と方法</h3>
+        <p>日常生活の中で室内の滞在時間の長い住宅とオフィスを対象に、主観的ウェルビーイングに影響する構成要素のアンケートを実施し（有効回答数1,040 名）、相関分析によって主観的ウェルビーイングに影響する構成要素を明らかにしました。</p>
+        <p>本ツールは明らかにした構成要素をもとに、建築空間の構成要素を定量的かつ網羅的、具体的に提示し、主観的ウェルビーイングを高める空間づくりの要素をシミュレーションできるツールとして開発しました。<br>
+        
+
+        <h3>本ツールの使い方</h3>
+        <ul>
+            <li><strong>Target Psychology:</strong> 向上させたい心理的指標（幸福度、満足度、気分など）を選択します。</li>
+            <li><strong>Attribute Filters:</strong> 対象となる居住者の性別、年代、居住地方を絞り込むことができます。</li>
+            <li><strong>Residential / Office:</strong> 住宅とオフィスにおける各建築要素の相関係数が、高い順（プラスの相関）にランキング形式で表示されます。</li>
+            <li><strong>相関係数（Correlation）:</strong> 0.1以上を相関あり、0.2以上を弱い相関、0.4以上を中程度の相関として解釈します。</li>
+        </ul>
+
+        <h3>本ツールで採用している心理尺度について</h3>
+        <p><strong>・人生満足度尺度（SWLS）：</strong>Diener らが主観的幸福感を計る目的で開発したもので、比較的長いスパンにおける主観的幸福度を確認する尺度とされている。本調査では、以下5 項目について質問した。「ほとんどの面で、私の人生は私の理想に近い」「私の人生は、とてもすばらしい状態だ」「私は自分の人生に満足している」「私はこれまで、自分の人生に求める大切なものを得てきた」「もう一度人生をやり直せるとしても、ほとんど何も変えないだろう」</p>
+        <p><strong>・ポジティブ感情（PA）/ ネガティブ感情（NA）：</strong>David Watson & Lee Anna Clark らが開発した気分評価尺度（日本語版PANAS）。ポジティブ感情「活気のある」「誇らしい」「強気な」等8項目、ネガティブ感情「びくびくした」「うろたえた」「心配した」等8項目の計16項目について、過去1ヶ月の体験を質問した。</p>
+        <p><strong>・幸せの4因子：</strong>前野らが提唱する国内の幸福研究の主要概念。本調査では短縮版（8項目）を採用。「私は有能である」「私は社会・組織の要請に応えている」「私は人の喜ぶ顔が見たい」「私を大切に思ってくれる人たちがいる」等の項目について質問した。</p>
+
+        
+        <h3 style="border-left:none; padding-left:0; border-top:1px solid #eee; padding-top:20px;">【引用文献】</h3>
+        <ul class="ref-list">
+            <li>・Diener, E., Emmons, R. A., Larsen, R. J., and Griffin, S.:The satisfaction with life scale, Journal of PersonalityAssessment, 49(1),pp.71-75, 1985.</li>
+            <li>・佐藤徳，安田朝子：日本語版PANASの作成，性格心理学研究，9 （2），pp.138-139，2001．</li>
+            <li>・前野隆司：幸せのメカニズム 実踐・幸福学入門,講談社現代新書,2013</li>
+        </ul>
     </div>
 </div>
 
@@ -182,8 +214,8 @@ const imageUrlMap = {
 "建具の開閉などで空間を好きに使える": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x248_webp_8dc5d578-4044-480f-989c-54d77f5e4327.png",
 "壁紙などを好きに変えられる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_96e914a0-0901-4297-aa09-5d3acf092aee.png",
 "自分の個性を表現できる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_7cef425c-165e-4cff-a415-68abd0ff0112.png",
-"壁に近い位置がよい": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_075df169-b298-4b58-9e09-ea50fcc21743.png",
-"窓に近い位置がよい": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_7a6780a3-4516-411b-b1df-2fdd8caa345c.png",
+"壁に近い位置がよい": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_7a6780a3-4516-411b-b1df-2fdd8caa345c.png",
+"窓に近い位置がよい": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_075df169-b298-4b58-9e09-ea50fcc21743.png",
 "好きに移動できる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_26016f2f-206f-40e9-9035-e4a06955af48.png",
 "行きたい場所へ行きやすい": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_686ea138-9992-4560-8fe6-c59c008d3546.png",
 "過ごし方を好きに決められる": "https://storage.googleapis.com/studio-design-asset-files/projects/rROn1rzYWA/s-466x247_webp_bb7a27fa-eba7-4964-b030-ca4fc088f776.png",
@@ -229,7 +261,6 @@ window.onload = function () {
             document.getElementById('main-ui').style.display = 'grid';
             document.getElementById('results-area').style.display = 'grid';
             runSimulation();
-            lucide.createIcons();
         }
     });
 };
@@ -284,6 +315,7 @@ function runSimulation() {
     const selects = document.querySelectorAll('.filter-select');
     let filteredTotal = masterData;
     selects.forEach(s => { if (s.value !== 'all') { const val = isNaN(s.value) ? s.value : Number(s.value); filteredTotal = filteredTotal.filter(d => d[s.dataset.idx] === val); }});
+    document.getElementById('total-n').innerText = `TOTAL N = ${filteredTotal.length}`;
     const targetIdx = parseInt(document.getElementById('target-psychology').value);
     renderGrid('grid-housing', 'n-housing', filteredTotal.filter(d => superNormalize(String(d[9])) === "住宅"), targetIdx);
     renderGrid('grid-office', 'n-office', filteredTotal.filter(d => superNormalize(String(d[9])) === "オフィス"), targetIdx);
