@@ -333,7 +333,7 @@ function renderGrid(gridId, nId, data, targetIdx) {
         const visual = img ? `<img src="${img}" loading="lazy">` : `<div class="icon-placeholder"><i data-lucide="component" size="32"></i></div>`;
         const card = document.createElement('div');
         card.className = 'card is-visible';
-        card.innerHTML = `<div class="rank-badge">${i+1}</div><div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(2)}</span><span class="r-unit">相関係数</span></div></div>`;
+        card.innerHTML = `<div class="rank-badge">${i+1}</div><div class="card-visual">${visual}</div><div class="card-content"><div class="card-label">${res.label}</div><div class="card-footer"><span class="r-unit">相関係数</span><span class="r-value ${res.r>=0?'pos':'neg'}">${res.r.toFixed(2)}</span></div></div>`;
         grid.appendChild(card);
     });
     lucide.createIcons();
